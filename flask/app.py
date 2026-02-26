@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 @app.route("/1")
@@ -13,11 +13,15 @@ def html_basic():
 def hrasek():
     return render_template("index3.html")
 
-    
 @app.route("/4")
 def ind4():
     text="ahoj palach"
     return render_template("index4.html", message=text)
+
+@app.route("/5")
+def ind5():
+    image_url = url_for('static', filename='images/log.jpg')
+    return render_template("index5.html", image_url=image_url)
 
 if __name__ == "__main__":
     app.run()
