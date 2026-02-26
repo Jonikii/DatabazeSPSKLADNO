@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 
 app = Flask(__name__)
 @app.route("/1")
@@ -23,5 +23,15 @@ def ind5():
     image_url = url_for('static', filename='images/log.jpg')
     return render_template("index5.html", image_url=image_url)
 
+@app.route('/6', methods=['GET', 'POST']) # Předání formulářem z HTML do pythonu
+def ind6():
+    result = None
+    if request.method == 'POST':
+        number = request.form.get('number', type=int)
+        if number is not None:
+            result = number + 1 
+    return render_template('index6.html', result=result)
+
 if __name__ == "__main__":
     app.run()
+
