@@ -13,5 +13,11 @@ def html_basic():
 def hrasek():
     return render_template("index3.html")
 
+    
+@app.route("/4")
+def ind4():
+    text="ahoj palach"
+    return render_template("index4.html", message=text)
+
 if __name__ == "__main__":
     app.run()
