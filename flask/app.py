@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request
+import os
 
 app = Flask(__name__)
 @app.route("/1")
@@ -31,6 +32,24 @@ def ind6():
         if number is not None:
             result = number + 1 
     return render_template('index6.html', result=result)
+
+
+app.config["UPLOAD_FOLDER"]="static/uploadedFiles/"
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+@app.route('/7', methods=['GET', 'POST'])
+def nahrani_souboru():
+    content = None
+    if request.method=='POST':
+        file= request.files.get('file')
+        if file and file.filename.endswith('.txt'):
+# Uložení souboru na disk
+            file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename) 
+            file.save(file_path)
+# Čtení obsahu souboru
+            file.seek(0) # reset pozice po uložení
+            content=file.read().decode('utf-8')
+    return render_template('index7.html', content=content)
+
 
 if __name__ == "__main__":
     app.run()
