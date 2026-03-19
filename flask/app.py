@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect
 import os
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -90,6 +90,24 @@ def graph2():
 def parametry(id, name):
     return render_template("index9.html", id=id, name=name)
 
+
+# Route /10 - přesměrování na základě vstupu z formuláře from flask import Flask, render_template, request, redirect
+
+@app.route('/10', methods=['GET', 'POST'])
+def redirekting():
+    result = None
+    if request.method != 'POST':
+        return render_template("index10.html", result=result)
+    
+    number = request.form.get('number', type=int)
+    result = number
+
+    if result == 1:
+        return redirect('/1') # přesměruj na route /1 elif result == 2:
+    elif result == 2:
+        return redirect('/2') # přesměruj na route /2
+    else:
+        return render_template("index10.html", result=result)
 
 
 if __name__ == "__main__":
