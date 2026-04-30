@@ -3,6 +3,14 @@ import os
 import plotly.graph_objects as go
 import plotly.io as pio
 
+from pripojeni import *
+import mysql.connector
+
+mydb = mysql.connector.connect(
+    host=HOST, user=USER, password=PASSWORD, database=DATABASE
+)
+
+
 app = Flask(__name__)
 @app.route("/1")
 def home():
