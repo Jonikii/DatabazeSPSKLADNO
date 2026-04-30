@@ -1,3 +1,7 @@
 # DatabazeSPSKLADNO
 
 ahojmoc
+
+& "g:/win32app/Portable Python-3.13.3 x64/python.exe" -m venv venv
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+.\venv\Scripts\activate

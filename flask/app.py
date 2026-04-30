@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect
 import os
 import plotly.graph_objects as go
 import plotly.io as pio
+import bcrypt
 
 from pripojeni import *
 import mysql.connector
@@ -11,7 +12,9 @@ mydb = mysql.connector.connect(
 )
 
 
+
 app = Flask(__name__)
+app.secret_key = 'Palach123'
 @app.route("/1")
 def home():
     return "Hello World!"
@@ -116,6 +119,41 @@ def redirekting():
         return redirect('/2') # přesměruj na route /2
     else:
         return render_template("index10.html", result=result)
+    
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['jmeno']
+        mail = request.form['email']
+        psw = request.form['psw']
+
+        # Hashování hesla
+        hashed_password = bcrypt.hashpw(psw.encode('utf-8'), bcrypt.gensalt())
+        hesloDoDB = hashed_password.decode('utf-8')
+
+        # Připojení k DB
+        mydb = mysql.connector.connect(
+            host=HOST, user=USER, password=PASSWORD, database=DATABASE
+        )
+        mycursor = mydb.cursor()
+
+        # Vytvoření tabulky (pokud neexistuje)
+        mycursor.execute("""CREATE TABLE IF NOT EXISTS uzivatele (
+            id int AUTO_INCREMENT PRIMARY KEY,
+            jmeno varchar(35) NOT NULL,
+            email varchar(50) NOT NULL,
+            heslo varchar(255) NOT NULL
+        );""")
+        mydb.commit()
+
+        # Vložení uživatele
+        sql = "INSERT INTO uzivatele (jmeno, email, heslo) VALUES (%s, %s, %s)"
+        mycursor.execute(sql, (name, mail, hesloDoDB))
+        mydb.commit()
+
+        return redirect(url_for('login'))  # po registraci → přihlášení
+
+    return render_template("register.html")
 
 
 if __name__ == "__main__":
